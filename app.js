@@ -6,6 +6,7 @@ const clearCartBtn = document.querySelector('.clear-cart');
 const cartDOM = document.querySelector('.cart');
 const cartOverlay = document.querySelector('.cart-overlay');
 const cartItems = document.querySelector('.cart-items');
+const cartTotal = document.querySelector(".cart-total");
 const cartContent = document.querySelector('.cart-content');
 const productsDOM = document.querySelector('.products-center');
 
@@ -91,13 +92,26 @@ class UI{
 
                     // 3.save cart in local storage
                     Storage.saveCart(cart); // check inspect->application->local storage
+
                     // 4.set cart values
+                    this.setCartValues(cart);
                     // 5. display cart item
                     // 6.show cart
                 });
-            
         });
-    };
+    }
+    setCartValues(cart){
+        let tempTotal = 0;
+        let itemsTotal = 0;
+        cart.map(item => {
+            tempTotal += item.price * item.amount;
+            itemsTotal += item.amount;
+        });
+        cartTotal.innerText = parseFloat(tempTotal.toFixed(
+            2));
+        cartItems.innerText = itemsTotal;
+        console.log(cartTotal,cartItems);
+    }
 }
 
 //local storage
