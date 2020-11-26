@@ -83,6 +83,7 @@ class UI{
                     // 4.set cart values
                     // 5. display cart item
                     // 6.show cart
+                    //hello
                 });
             }
         });
