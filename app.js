@@ -11,6 +11,8 @@ const productsDOM = document.querySelector('.products-center');
 
 //cart
 let cart = []
+//buttons
+let buttonsDOM = []
 
 // getting the products- currently from json, later we'll change
 class Products{ 
@@ -64,6 +66,7 @@ class UI{
     getBagButtons(){ //when we click on add-to-bag in product. it should get added to cart. this function does it
         const buttons = [...document.querySelectorAll('.bag-btn'
         )]; // ...(spread operator) specifies an array not a node-list
+        buttonsDOM = buttons;
         buttons.forEach(button => {
             let id = button.dataset.id;
             let inCart = cart.find(item => item.id === id);
@@ -71,20 +74,28 @@ class UI{
                 button.innerText = "In Cart";
                 button.disabled = true;
             }
-            else{
+            
                 button.addEventListener('click',(event) => { //everytime we click on add-tocart button it counts.
                     //console.log(event);
                     event.target.innerText = "In Cart";
                     event.target.disabled = true;
                     //now we neet to get clicked item/product from local storage
                     //TO_DO: 1.get product from products
+                    let cartItem = {...Storage.getProduct(id),
+                        amount : 1 };//amount is needed in cart calculations
+                    // we first declare emply array in line 13 and append it here once user has cicked "addtocart"
+
                     // 2.add product to cart
+                    cart = [...cart, cartItem]; //we use spread operator to get all items that we have in cart
+                    //console.log(cart); //this will show updated list of cart
+
                     // 3.save cart in local storage
+                    Storage.saveCart(cart); // check inspect->application->local storage
                     // 4.set cart values
                     // 5. display cart item
                     // 6.show cart
                 });
-            }
+            
         });
     };
 }
@@ -94,6 +105,13 @@ class Storage{ //this class locally stores products and details
  static saveProducts(products){
      localStorage.setItem("products", JSON.stringify(products)
      );
+ }
+ static getProduct(id){
+     let products = JSON.parse(localStorage.getItem('products'));
+     return products.find(product => product.id === id);
+ }
+ static saveCart(cart) {
+     localStorage.setItem('cart',JSON.stringify(cart))
  }
 }
 
