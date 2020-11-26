@@ -61,10 +61,40 @@ class UI{
         //console.log(products);
         productsDOM.innerHTML = result;
     }
+    getBagButtons(){ //when we click on add-to-bag in product. it should get added to cart. this function does it
+        const buttons = [...document.querySelectorAll('.bag-btn'
+        )]; // ...(spread operator) specifies an array not a node-list
+        buttons.forEach(button => {
+            let id = button.dataset.id;
+            let inCart = cart.find(item => item.id === id);
+            if(inCart){//this makes sure if the item is already in cart, it will show "in-cart' instead of "add-to-bag"
+                button.innerText = "In Cart";
+                button.disabled = true;
+            }
+            else{
+                button.addEventListener('click',(event) => { //everytime we click on add-tocart button it counts.
+                    //console.log(event);
+                    event.target.innerText = "In Cart";
+                    event.target.disabled = true;
+                    //now we neet to get clicked item/product from local storage
+                    //TO_DO: 1.get product from products
+                    // 2.add product to cart
+                    // 3.save cart in local storage
+                    // 4.set cart values
+                    // 5. display cart item
+                    // 6.show cart
+                });
+            }
+        });
+    };
 }
-//local storage
-class Storage{
 
+//local storage
+class Storage{ //this class locally stores products and details
+ static saveProducts(products){
+     localStorage.setItem("products", JSON.stringify(products)
+     );
+ }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -72,6 +102,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const products = new Products();
 
     // get all products
-    products.getProducts().then(products =>
-    ui.displayProducts(products))
+    // .then waits for the prev function to get executed first.
+    products.getProducts().then(products => {//.then waits for getProducts() to execute
+        ui.displayProducts(products);
+        Storage.saveProducts(products); //saves products list in storage, check inspect->application->local storage
+    }).then(() => { //Here, we wait for the above 2 lines to take place first.
+        ui.getBagButtons();
+    });
 });
