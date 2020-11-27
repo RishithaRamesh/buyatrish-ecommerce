@@ -39,7 +39,6 @@ async getProducts(){
 }
 // display products- responsible for getting elements and displaying it
 class UI{
-    
     displayProducts(products){
         let result = '';
         products.forEach(product => {
@@ -95,7 +94,9 @@ class UI{
 
                     // 4.set cart values
                     this.setCartValues(cart);
-                    // 5. display cart item
+
+                    // 5. display cart item i.e addinf item to DOM
+                    this.addCartItem(cartItem);
                     // 6.show cart
                 });
         });
@@ -105,12 +106,32 @@ class UI{
         let itemsTotal = 0;
         cart.map(item => {
             tempTotal += item.price * item.amount;
-            itemsTotal += item.amount;
+            itemsTotal += item.amount; //total no of items
         });
         cartTotal.innerText = parseFloat(tempTotal.toFixed(
             2));
         cartItems.innerText = itemsTotal;
-        console.log(cartTotal,cartItems);
+    }
+    //console.log(cartTotal,cartItems);
+    addCartItem(item){
+            const div = document.createElement('div');
+            div.classList.add('cart-item');
+            // we are getting these items dynamically
+            //now we cut of html part and paste it here
+            div.innerHTML = `
+                <img src=${item.image} alt="product" />
+                <div>
+                <h4>${item.title}</h4>
+                <h5>$${item.price}</h5>
+                <span class="remove-item" data-id=${item.id}>remove</span>
+                </div>
+                <div>
+                <i class="fas fa-chevron-up" data-id=${item.id}></i>
+                <p class="item-amount">${item.amount}</p>
+                <i class="fas fa-chevron-down" data-id=${item.id}></i>
+                </div>`;
+            cartContent.appendChild(div);
+            console.log(cartContent);
     }
 }
 
