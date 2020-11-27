@@ -97,7 +97,9 @@ class UI{
 
                     // 5. display cart item i.e addinf item to DOM
                     this.addCartItem(cartItem);
+
                     // 6.show cart
+                    this.showCart();
                 });
         });
     }
@@ -131,7 +133,14 @@ class UI{
                 <i class="fas fa-chevron-down" data-id=${item.id}></i>
                 </div>`;
             cartContent.appendChild(div);
-            console.log(cartContent);
+            //console.log(cartContent);
+    }
+    showCart(){
+        //we call 2 classes transparantBcg and showCart, so that the cart can 
+        //check styles.css line no 194 197
+        cartOverlay.classList.add('transparentBcg');
+        cartDOM.classList.add('showCart');
+
     }
 }
 
