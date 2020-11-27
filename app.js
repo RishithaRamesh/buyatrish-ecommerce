@@ -120,6 +120,7 @@ class UI{
             div.classList.add('cart-item');
             // we are getting these items dynamically
             //now we cut of html part and paste it here
+            // we have an empty div ready in index.html and the retreived values will be reflected there
             div.innerHTML = `
                 <img src=${item.image} alt="product" />
                 <div>
@@ -140,7 +141,21 @@ class UI{
         //check styles.css line no 194 197
         cartOverlay.classList.add('transparentBcg');
         cartDOM.classList.add('showCart');
-
+    }
+    setupAPP(){
+        cart = Storage.getCart(); //line 163
+        //we update cart here
+        this.setCartValues(cart); //line 106        
+        this.populateCart(cart);
+        cartBtn.addEventListener('click', this.showCart);
+        closeCartBtn.addEventListener('click',this.hideCart);
+    }
+    populateCart(cart){
+        cart.forEach(item => this.addCartItem(item));
+    }
+    hideCart(){
+        cartOverlay.classList.remove("transparentBcg");
+        cartDOM.classList.remove("showCart");
     }
 }
 
@@ -157,11 +172,18 @@ class Storage{ //this class locally stores products and details
  static saveCart(cart) {
      localStorage.setItem('cart',JSON.stringify(cart))
  }
+ static getCart(){
+     //ternary operator
+     //retrieving cart item from local storage
+     return localStorage.getItem('cart')? JSON.parse(localStorage.getItem('cart')):[];
+ }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
     const ui = new UI();
     const products = new Products();
+    //setup app
+    ui.setupAPP();
 
     // get all products
     // .then waits for the prev function to get executed first.
