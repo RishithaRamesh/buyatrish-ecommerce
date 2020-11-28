@@ -165,6 +165,9 @@ class UI{
         clearCartBtn.addEventListener('click', () => {
             this.clearCart();
         });//check next function
+        cartContent.addEventListener('click', event=>{
+            console.log(event.target);
+        })
     }
     clearCart(){
         let cartItems = cart.map(item => item.id);
@@ -188,6 +191,7 @@ class UI{
     getSingleButton(id){
         return buttonsDOM.find(button => button.dataset.id === id);
     }
+
 }
 
 //local storage
