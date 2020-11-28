@@ -144,18 +144,45 @@ class UI{
     }
     setupAPP(){
         cart = Storage.getCart(); //line 163
-        //we update cart here
+        //we update cart array here
         this.setCartValues(cart); //line 106        
         this.populateCart(cart);
         cartBtn.addEventListener('click', this.showCart);
         closeCartBtn.addEventListener('click',this.hideCart);
     }
     populateCart(cart){
+        //we loop throughcart array and we add every item to line 118 i.e in cart(right side)
         cart.forEach(item => this.addCartItem(item));
     }
     hideCart(){
-        cartOverlay.classList.remove("transparentBcg");
+        //basically, when closes sidebar cart 
+        //cartOverlay and cartDom are classes we retrived in line 7
+        cartOverlay.classList.remove("transparentBcg");//line 194 in styles.css
         cartDOM.classList.remove("showCart");
+    }
+    cartLogic(){
+        //we clear the cart here i.e clear cart button
+        clearCartBtn.addEventListener('click', () => {
+            this.clearCart();
+        });//check next function
+    }
+    clearCart(){
+        let cartItems = cart.map(item => item.id);
+        cartItems.forEach(id => this.removeItem(id));
+        //console.log(cartItems);
+    }
+    removeItem(id){
+        cart = cart.filter(item => item.id !== id);
+        //set cart values
+        this.setCartValues(cart);
+        Storage.saveCart(cart);
+        //we need to reset from Incart to add-to-cart in products
+        let button = this.getSingleButton(id);
+        button.disabled = false;
+        button.innerHTML = `<i class="fas fa-shopping-cart></i>add to cart`;
+    }
+    getSingleButton(id){
+        return buttonsDOM.find(button => button.dataset.id === id);
     }
 }
 
@@ -173,7 +200,7 @@ class Storage{ //this class locally stores products and details
      localStorage.setItem('cart',JSON.stringify(cart))
  }
  static getCart(){
-     //ternary operator
+     //ternary operator in case the local storage is empty
      //retrieving cart item from local storage
      return localStorage.getItem('cart')? JSON.parse(localStorage.getItem('cart')):[];
  }
@@ -192,5 +219,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
         Storage.saveProducts(products); //saves products list in storage, check inspect->application->local storage
     }).then(() => { //Here, we wait for the above 2 lines to take place first.
         ui.getBagButtons();
+        ui.cartLogic();
     });
 });
