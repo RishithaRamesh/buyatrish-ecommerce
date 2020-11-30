@@ -166,8 +166,35 @@ class UI{
             this.clearCart();
         });//check next function
         cartContent.addEventListener('click', event=>{
-            console.log(event.target);
-        })
+            //console.log(event.target);
+            if(event.target.classList.contains('remove-item')){
+                let removeItem = event.target;
+                //console.log(removeItem);
+                let id = removeItem.dataset.id;
+                //console.log(removeItem.parentElement);
+                // this is to make the "remove" button work in cart
+                cartContent.removeChild(
+                    removeItem.parentElement.parentElement
+                );
+                this.removeItem(id);
+            }
+            else if(event.target.classList.contains("fa-chevron-up")){
+                let addAmount = event.target;
+                let id = addAmount.dataset.id;
+                //console.log(addAmount);
+                //once the chevron-up works, 
+                //1)increase amount              
+                let tempItem = cart.find(item => item.id===id);
+                tempItem.amount = tempItem.amount + 1;
+                //2) update amount in local storage
+                Storage.saveCart(cart);
+                // 3) update "cart total" value
+                this.setCartValues(cart);//working w DOM here
+                //new values in cart is shown after next line is executes
+                addAmount.nextElementSibling.innerText = tempItem.amount; 
+
+            }
+        });
     }
     clearCart(){
         let cartItems = cart.map(item => item.id);
